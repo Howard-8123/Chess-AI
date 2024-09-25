@@ -1,0 +1,19 @@
+import numpy as np
+
+class board:
+    def __init__(self):
+        board = np.array()
+
+
+
+class chesspiece:
+    def __init__(self, position: np.array(), side): # side: 0 for white and 1 for black
+        self.alive = True
+        self.pos = position
+        self.side = side
+
+    def OutofBoard(self, position):
+        if position[0] > 7 or position[1] > 7:
+            return True
+
+    def move(self, Orginal, destination):
