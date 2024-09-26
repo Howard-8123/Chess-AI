@@ -1,19 +1,43 @@
 import numpy as np
 
-class board:
+class ChessBoard:
     def __init__(self):
-        board = np.array()
+        self.board = np.zeros((8, 8), dtype=int)
 
+    def empty(self, pos):
+        self.board[pos] = 0
 
+    def getboard(self):
+        return self.board
+
+    def change(self, pos, piece):
+        self.board[pos] = piece
 
 class chesspiece:
-    def __init__(self, position: np.array(), side): # side: 0 for white and 1 for black
+    def __init__(self, initialPos, side): # side: 0 for white and 1 for black
         self.alive = True
-        self.pos = position
+        self.pos = initialPos
+        self.initial = initialPos
         self.side = side
+        
 
     def OutofBoard(self, position):
         if position[0] > 7 or position[1] > 7:
             return True
 
-    def move(self, Orginal, destination):
+    def die(self):
+        self.alive = False
+
+    def move(self, original, destination, board):
+        if board.getboard()[destination] != 0:
+            board.getboard()[destination].die()
+        board.change(destination, board.getboard()[original])
+        board.empty(original)
+
+
+class pawn(chesspiece):
+    def __init__(self, Initialpos, side):
+        super.__init__(Initialpos, side)
+    
+    def legal_move(self, original, destination):
+        pass
