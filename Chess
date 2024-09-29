@@ -64,6 +64,8 @@ class Pawn(Chesspiece):
                     return False
                 if board.getboard()[destination] == 0:
                     return False
+            if self.OutofBoard(destination):
+                return False
             return True
         else:
             if org_y - dest_y  not in moveable:
@@ -73,6 +75,8 @@ class Pawn(Chesspiece):
                     return False
                 if board.getboard()[destination] == 0:
                     return False
+            if self.OutofBoard(destination):
+                return False
             return True
 
 
@@ -102,3 +106,50 @@ class Pawn(Chesspiece):
 class Knight(Chesspiece):
     def __init__(self, InitialPos, Side, initialPos, side):
         super().__init__(initialPos, side)
+
+    def legal_move(self, original, destination, board):
+        if self.OutofBoard(destination):
+            return False
+        org_x = original[0]
+        org_y = original[1]
+        dest_x = destination[0]
+        dest_y = destination[1]
+        if (abs(org_x - dest_x)==2) and (abs(org_y - dest_y)==1):
+            return True
+        elif (abs(org_y - dest_y)==2) and (abs(org_x - dest_x)==1):
+            return True
+        else:
+            return False
+
+
+
+class Bishop(Chesspiece):
+    def __init__(self, InitialPos, Side, initialPos, side):
+        super().__init__(initialPos, side)
+        
+    def legal_move(self, original, destination, board):
+        if self.OutofBoard(destination):
+            return False
+
+        org_x = original[0]
+        org_y = original[1]
+        dest_x = destination[0]
+        dest_y = destination[1]
+        if abs(org_x - dest_x)!=abs(org_y - dest_y):
+            return False
+        elif abs(dest_x - org_x) == 1: #Nothing between them
+            return True
+        else:         #Check Nothing Between them
+            x_count = org_x
+            x_dir = 1
+            if x_count > dest_x:
+                x_dir = -1
+            y_count = org_y
+            y_dir = 1
+            if y_count > dest_y:
+                y_dir = -1
+            for x in range(x_count + 1, dest_x, x_dir):
+                y_count = y_count + y_dir
+                if board.getboard[x][y_count] != 0:
+                    return False
+            return True
