@@ -15,7 +15,6 @@ class ChessBoard:
         self.board[pos] = piece
 
 
-
 class Chesspiece:
     def __init__(self, initialPos, side):  # side: 0 for white and 1 for black
         self.alive = True
@@ -41,8 +40,6 @@ class Chesspiece:
             board.empty(original)
 
 
-
-
 class Pawn(Chesspiece):
     def __init__(self, Initialpos, side):
         super().__init__(Initialpos, side)
@@ -53,10 +50,10 @@ class Pawn(Chesspiece):
         dest_x = destination[0]
         dest_y = destination[1]
         if original == self.initial():
-            moveable = [1,2]
+            moveable = [1, 2]
         else:
             moveable = [1]
-        if self.side == 0: #White
+        if self.side == 0:  # White
             if dest_y - org_y not in moveable:
                 return False
             if dest_x != org_x:
@@ -68,7 +65,7 @@ class Pawn(Chesspiece):
                 return False
             return True
         else:
-            if org_y - dest_y  not in moveable:
+            if org_y - dest_y not in moveable:
                 return False
             if dest_x != org_x:
                 if abs(dest_x - org_x) != 1:
@@ -79,7 +76,6 @@ class Pawn(Chesspiece):
                 return False
             return True
 
-
     def move(self, original, destination, board):
         if self.legal_move(self, original, destination, board):
             if board.getboard()[destination] != 0:
@@ -88,17 +84,18 @@ class Pawn(Chesspiece):
             board.empty(original)
             if destination[1] in [0, 7]:
                 pass
+
     def promote(self, destination, board, option):
-        if option == "r": # replace with rook
+        if option == "r":  # replace with rook
             board.empty(destination)
             pass
-        elif option == "b": #bishop
+        elif option == "b":  # bishop
             board.empty(destination)
             pass
-        elif option == "q": #queen
+        elif option == "q":  # queen
             board.empty(destination)
             pass
-        elif option == "k": #knight
+        elif option == "k":  # knight
             board.empty(destination)
             pass
 
@@ -114,19 +111,18 @@ class Knight(Chesspiece):
         org_y = original[1]
         dest_x = destination[0]
         dest_y = destination[1]
-        if (abs(org_x - dest_x)==2) and (abs(org_y - dest_y)==1):
+        if (abs(org_x - dest_x) == 2) and (abs(org_y - dest_y) == 1):
             return True
-        elif (abs(org_y - dest_y)==2) and (abs(org_x - dest_x)==1):
+        elif (abs(org_y - dest_y) == 2) and (abs(org_x - dest_x) == 1):
             return True
         else:
             return False
 
 
-
 class Bishop(Chesspiece):
     def __init__(self, InitialPos, Side, initialPos, side):
         super().__init__(initialPos, side)
-        
+
     def legal_move(self, original, destination, board):
         if self.OutofBoard(destination):
             return False
@@ -135,11 +131,11 @@ class Bishop(Chesspiece):
         org_y = original[1]
         dest_x = destination[0]
         dest_y = destination[1]
-        if abs(org_x - dest_x)!=abs(org_y - dest_y):
+        if abs(org_x - dest_x) != abs(org_y - dest_y):
             return False
-        elif abs(dest_x - org_x) == 1: #Nothing between them
+        elif abs(dest_x - org_x) == 1:  # Nothing between them
             return True
-        else:         #Check Nothing Between them
+        else:  # Check Nothing Between them
             x_count = org_x
             x_dir = 1
             if x_count > dest_x:
@@ -153,3 +149,49 @@ class Bishop(Chesspiece):
                 if board.getboard[x][y_count] != 0:
                     return False
             return True
+
+
+class Rook(Chesspiece):
+    def __init__(self, InitialPos, Side, initialPos, side):
+        super().__init__(initialPos, side)
+
+    def legal_move(self, original, destination, board):
+        if self.OutofBoard(destination):
+            return False
+        org_x = original[0]
+        org_y = original[1]
+        dest_x = destination[0]
+        dest_y = destination[1]
+        if org_y == dest_y:
+            if abs(org_x - dest_x) == 1:
+                return True
+            else:
+                direction = 1
+                if org_x > dest_x:
+                    direction = -1
+                for x in range(org_x+1, dest_x, direction):
+                    if board.getboard()[x][org_y] != 0:
+                        return False
+                return True
+        elif org_x == dest_x:
+            if abs(org_y - dest_y) == 1:
+                return True
+            else:
+                direction = 1
+                if org_y > dest_y:
+                    direction = -1
+                for x in range(org_y+1, dest_y, direction):
+                    if board.getboard()[x][org_y] != 0:
+                        return False
+                return True
+
+
+class Queen(Chesspiece):
+    def __init__(self, InitialPos, Side, initialPos, side):
+        super().__init__(initialPos, side)
+
+    def legal_move(self, original, destination, board):
+        if Bishop.legal_move(self, original, destination, board) or Rook.legal_move(self, original, destination, board):
+            return True
+        else:
+            return False
