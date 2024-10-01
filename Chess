@@ -14,6 +14,18 @@ class ChessBoard:
     def change(self, pos, piece):
         self.board[pos] = piece
 
+    def all_legal(self):
+        legal_list = []
+        for chesspiece in self.board():
+            org_pos = chesspiece.get_pos(self.board())
+            y = -1
+            for x in range(0, 8):
+                y += 1
+                pos = np.asarray(x, y)
+                if chesspiece.legal_move(org_pos, pos, self.board()):
+                    legal_list.append([org_pos, pos])
+        return legal_list
+
 
 class Chesspiece:
     def __init__(self, initialPos, side):  # side: 0 for white and 1 for black
@@ -38,6 +50,9 @@ class Chesspiece:
                 board.getboard()[destination].die()
             board.change(destination, board.getboard()[original])
             board.empty(original)
+
+    def get_pos(self, board):
+        return np.where(board == self)
 
 
 class Pawn(Chesspiece):
