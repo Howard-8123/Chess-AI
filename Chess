@@ -14,25 +14,28 @@ class ChessBoard:
     def change(self, pos, piece):
         self.board[pos] = piece
 
-    def all_legal(self):
-        legal_list = []
+    def all_legal(self, side: int):# side --> 0, 1 for white and black
+        legal_dict = {}
         for chesspiece in self.board():
-            org_pos = chesspiece.get_pos(self.board())
-            y = -1
-            for x in range(0, 8):
-                y += 1
-                pos = np.asarray(x, y)
-                if chesspiece.legal_move(org_pos, pos, self.board()):
-                    legal_list.append([org_pos, pos])
-        return legal_list
+            if chesspiece.getside() == side:# white
+                org_pos = chesspiece.get_pos(self.board())
+                y = -1
+                for x in range(0, 8):
+                    y += 1
+                    pos = np.asarray(x, y)
+                    if chesspiece.legal_move(org_pos, pos, self.board()):
+                        if org_pos not in legal_dict.keys():
+                            legal_dict[org_pos] = list
+                        legal_dict[org_pos].append(pos)
+        return legal_dict
 
 
 class Chesspiece:
     def __init__(self, initialPos, side):  # side: 0 for white and 1 for black
         self.alive = True
         self.pos = initialPos
-        self.initial = initialPos
         self.side = side
+        self.moved = False
 
     def OutofBoard(self, position):
         if position[0] > 7 or position[1] > 7:
@@ -54,6 +57,14 @@ class Chesspiece:
     def get_pos(self, board):
         return np.where(board == self)
 
+    def getside(self):
+        return self.side
+
+    def move(self):
+        self.moved = True
+
+
+
 
 class Pawn(Chesspiece):
     def __init__(self, Initialpos, side):
@@ -64,7 +75,7 @@ class Pawn(Chesspiece):
         org_y = original[1]
         dest_x = destination[0]
         dest_y = destination[1]
-        if original == self.initial():
+        if not self.moved:
             moveable = [1, 2]
         else:
             moveable = [1]
@@ -116,7 +127,7 @@ class Pawn(Chesspiece):
 
 
 class Knight(Chesspiece):
-    def __init__(self, InitialPos, Side, initialPos, side):
+    def __init__(self, initialPos, side):
         super().__init__(initialPos, side)
 
     def legal_move(self, original, destination, board):
@@ -135,7 +146,7 @@ class Knight(Chesspiece):
 
 
 class Bishop(Chesspiece):
-    def __init__(self, InitialPos, Side, initialPos, side):
+    def __init__(self, initialPos, side):
         super().__init__(initialPos, side)
 
     def legal_move(self, original, destination, board):
@@ -167,7 +178,7 @@ class Bishop(Chesspiece):
 
 
 class Rook(Chesspiece):
-    def __init__(self, InitialPos, Side, initialPos, side):
+    def __init__(self, initialPos, side):
         super().__init__(initialPos, side)
 
     def legal_move(self, original, destination, board):
@@ -202,7 +213,7 @@ class Rook(Chesspiece):
 
 
 class Queen(Chesspiece):
-    def __init__(self, InitialPos, Side, initialPos, side):
+    def __init__(self, initialPos, side):
         super().__init__(initialPos, side)
 
     def legal_move(self, original, destination, board):
@@ -210,3 +221,64 @@ class Queen(Chesspiece):
             return True
         else:
             return False
+
+
+class King(Chesspiece):
+    def __init__(self, initialPos, side):
+        super().__init__(initialPos, side)
+
+    def legal_move(self, original, destination, board):
+        if original in self.castling(board).keys():
+            if self.castling(board)[original] == destination:
+                return True
+        if self.checked(self, destination, board):
+            return False
+
+        if self.OutofBoard(destination):
+            return False
+        org_x = original[0]
+        org_y = original[1]
+        dest_x = destination[0]
+        dest_y = destination[1]
+
+        if abs(org_x - dest_x) > 1:
+            return False
+        if abs(org_y - dest_y) > 1:
+            return False
+        return True
+
+    def checked(self, destination, board):
+        if self.side == 0:
+            oppo_side = 1
+        elif self.side == 1:
+            oppo_side = 0
+        if destination in board.all_legal(oppo_side).values():
+            return True
+        else:
+            return False
+
+
+    def castling(self, board):
+        org_x = self.getpos[0]
+        org_y = self.getpos[1]
+        mydict = {}
+        if not self.moved():
+            mydict[np.array(org_x, org_y)] = []
+            if not board.getboard()[org_x - 4][org_y].moved():
+                flag = True  # Assume between the pieces are empty
+                for x in range(1, 4):
+                    if board.getboard()[org_x - x][org_y] != 0:
+                        flag = False
+                if flag:  # No pieces between them
+                    mydict[np.array(org_x, org_y)].append(np.array(org_x - 2, org_y))
+                    mydict[np.array(org_x - 4, org_y)] = np.array(org_x-1, org_y)
+            if not board.getboard()[org_x + 3][org_y].moved():
+                flag = True  # Assume between the pieces are empty
+                for x in range(1, 3):
+                    if board.getboard()[org_x + x][org_y] != 0:
+                        flag = False
+                if flag:  # No pieces between them
+                    mydict[np.array(org_x, org_y)].append(np.array(org_x + 2, org_y))
+                    mydict[np.array(org_x + 3, org_y)] = np.array(org_x+1, org_y)
+
+        return mydict
