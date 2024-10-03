@@ -1,4 +1,4 @@
-from chess import *
+from Class import *
 
 
 def main():
@@ -45,7 +45,7 @@ def create_board():
 
 
 
-    print(myboard.getboard())
+    print(myboard.all_legal(0))
 
 
 create_board()
