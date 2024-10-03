@@ -16,17 +16,20 @@ class ChessBoard:
 
     def all_legal(self, side: int):  # side --> 0, 1 for white and black
         legal_dict = {}
-        for chesspiece in self.board:
-            if chesspiece.getside() == side:  # white
-                org_pos = chesspiece.get_pos(self.board)
-                y = -1
-                for x in range(0, 8):
-                    y += 1
-                    pos = np.asarray(x, y)
-                    if chesspiece.legal_move(org_pos, pos, self.board):
-                        if org_pos not in legal_dict.keys():
-                            legal_dict[org_pos] = list
-                        legal_dict[org_pos].append(pos)
+        for row in self.board:
+            for chesspiece in row:
+                if chesspiece.__class__.__name__ == "empty":
+                    pass
+                elif chesspiece.getside() == side:  # white
+                    org_pos = chesspiece.get_pos(self.board)
+                    y = -1
+                    for x in range(0, 8):
+                        y += 1
+                        pos = np.asarray(x, y)
+                        if chesspiece.legal_move(org_pos, pos, self.board):
+                            if org_pos not in legal_dict.keys():
+                                legal_dict[org_pos] = list
+                            legal_dict[org_pos].append(pos)
         return legal_dict
 
 
