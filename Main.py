@@ -1,4 +1,4 @@
-from Class import *
+from chess import *
 
 
 def main():
@@ -11,20 +11,46 @@ def create_board():
     for x in range(0, 8):
         for y in range(0, 2):
             if y !=0:
-                if x == 0 or x ==8:
-                    myboard.change((x, y), Rook((x,y), 0))
-                elif x == 1 or x ==7:
-                    myboard.change((x, y), Knight((x, y), 0))
-                elif x ==2 or x == 6:
-                    myboard.change((x, y), Bishop((x, y), 0))
+                if x == 0 or x ==7:
+                    piece = Rook((x,y), 0)
+                elif x == 1 or x ==6:
+                    piece = Knight((x,y), 0)
+                elif x ==2 or x == 5:
+                    piece = Bishop((x,y), 0)
                 elif x == 3:
-                    myboard.change((x, y), Queen((x, y), 0))
+                    piece = Queen((x,y), 0)
                 elif x == 4:
-                    myboard.change((x, y), King((x, y), 0))
+                    piece = King((x,y), 0)
+            else:
+                piece = Pawn((x, y), 0)
+            myboard.change((x, y), piece)
+        # Black side
+        for y in range(6, 8):
+            if y == 6:
+                piece = Pawn((x, y), 1)
+            else:
+                if x == 0 or x ==7:
+                    piece = Rook((x,y), 1)
+                elif x == 1 or x ==6:
+                    piece = Knight((x,y), 1)
+                elif x ==2 or x == 5:
+                    piece = Bishop((x,y), 1)
+                elif x == 3:
+                    piece = Queen((x,y), 1)
+                elif x == 4:
+                    piece = King((x,y), 1)
+
+
+
+
+
+
+    print(myboard.getboard())
+
 
 create_board()
+
 
 def convert(np_array):
     mytuple = tuple(np_array.tolist())
     return mytuple
-
