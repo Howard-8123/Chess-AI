@@ -3,10 +3,10 @@ import numpy as np
 
 class ChessBoard:
     def __init__(self):
-        self.board = np.zeros((8, 8), dtype=int)
+        self.board = np.full((8, 8), empty())
 
     def empty(self, pos):
-        self.board[pos] = 0
+        self.board[pos] = empty()
 
     def getboard(self):
         return self.board
@@ -14,10 +14,10 @@ class ChessBoard:
     def change(self, pos, piece):
         self.board[pos] = piece
 
-    def all_legal(self, side: int):# side --> 0, 1 for white and black
+    def all_legal(self, side: int):  # side --> 0, 1 for white and black
         legal_dict = {}
         for chesspiece in self.board:
-            if chesspiece.getside() == side:# white
+            if chesspiece.getside() == side:  # white
                 org_pos = chesspiece.get_pos(self.board)
                 y = -1
                 for x in range(0, 8):
@@ -289,3 +289,8 @@ class King(Chesspiece):
 
 
         return mydict
+
+
+class empty:
+    def __init__(self):
+        pass
