@@ -7,7 +7,8 @@ def split(mytuple):
 
 class ChessBoard:
     def __init__(self):
-        self.board = [[] for rows in range(8)]
+        self.board = [[empty() for _ in range(8)] for _ in range(8)]
+
 
     def empty(self, pos: tuple):
         x, y = split(pos)
@@ -17,7 +18,7 @@ class ChessBoard:
         return self.board
 
     def change(self, pos, piece):
-        x, y =split(pos)
+        x, y = split(pos)
         self.board[x][y] = piece
 
     def getpiece(self, pos):
