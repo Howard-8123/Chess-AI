@@ -1,4 +1,4 @@
-from Classes import *
+from chess import *
 
 
 def main():
@@ -39,15 +39,17 @@ def create_board():
                     piece = Queen((x,y), 1)
                 elif x == 4:
                     piece = King((x,y), 1)
+            myboard.change((x, y), piece)
+    print(myboard.getboard())
+    for piece in myboard.board:
+        pos = myboard.board.index(piece)
+        print(pos)
+        myboard.change(pos, piece.__class__.__name__)
 
-
-
-
+    print(myboard.getboard())
 
 
     print(myboard.all_legal(0))
 
 
 create_board()
-
-
