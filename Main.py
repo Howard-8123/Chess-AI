@@ -1,4 +1,4 @@
-from Class import *
+from Classes import *
 
 
 def main():
@@ -51,6 +51,3 @@ def create_board():
 create_board()
 
 
-def convert(np_array):
-    mytuple = tuple(np_array.tolist())
-    return mytuple
