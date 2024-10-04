@@ -1,5 +1,9 @@
 import numpy as np
 
+def convert(np_array):
+    mytuple = tuple(np_array.tolist())
+    return mytuple
+
 
 class ChessBoard:
     def __init__(self):
@@ -25,7 +29,7 @@ class ChessBoard:
                     y = -1
                     for x in range(0, 8):
                         y += 1
-                        pos = np.asarray(x, y)
+                        pos = np.asarray((x, y))
                         if chesspiece.legal_move(org_pos, pos, self.board):
                             if org_pos not in legal_dict.keys():
                                 legal_dict[org_pos] = list
@@ -52,7 +56,7 @@ class Chesspiece:
 
     def move(self, original, destination, board):
         if self.legal_move(self, original, destination, board):
-            if board.getboard()[destination] != 0:
+            if board.getboard()[destination].__class__.__name__ != "empty":
                 board.getboard()[destination].die()
             board.change(destination, board.getboard()[original])
             board.empty(original)
@@ -88,7 +92,7 @@ class Pawn(Chesspiece):
             if dest_x != org_x:
                 if abs(dest_x - org_x) != 1:
                     return False
-                if board.getboard()[destination] == 0:
+                if board[destination].__class__.__name__ == "empty":
                     return False
             if self.OutofBoard(destination):
                 return False
@@ -99,7 +103,7 @@ class Pawn(Chesspiece):
             if dest_x != org_x:
                 if abs(dest_x - org_x) != 1:
                     return False
-                if board.getboard()[destination] == 0:
+                if board[destination].__class__.__name__ == "empty":
                     return False
             if self.OutofBoard(destination):
                 return False
@@ -107,7 +111,7 @@ class Pawn(Chesspiece):
 
     def move(self, original, destination, board):
         if self.legal_move(self, original, destination, board):
-            if board.getboard()[destination] != 0:
+            if board.getboard()[destination].__class__.__name__ != "empty":
                 board.getboard()[destination].die()
             board.change(destination, board.getboard()[original])
             board.empty(original)
@@ -199,7 +203,7 @@ class Rook(Chesspiece):
                 if org_x > dest_x:
                     direction = -1
                 for x in range(org_x+1, dest_x, direction):
-                    if board.getboard()[x, org_y] != 0:
+                    if board.getboard()[x, org_y].__class__.__name__ != "empty":
                         return False
                 return True
         elif org_x == dest_x:
@@ -210,7 +214,7 @@ class Rook(Chesspiece):
                 if org_y > dest_y:
                     direction = -1
                 for x in range(org_y+1, dest_y, direction):
-                    if board.getboard()[x, org_y] != 0:
+                    if board.getboard()[x, org_y].__class__.__name__ != "empty":
                         return False
                 return True
 
@@ -276,7 +280,7 @@ class King(Chesspiece):
             if not board.getboard()[org_x - check_x, org_y].moved():
                 flag = True  # Assume between the pieces are empty
                 for x in range(1, 4):
-                    if board.getboard()[org_x - x, org_y] != 0:
+                    if board.getboard()[org_x - x, org_y].__class__.__name__ != "empty":
                         flag = False
                 if flag:  # No pieces between them
                     mydict[np.array(org_x, org_y)].append(np.array(org_x - 2, org_y))
@@ -284,7 +288,7 @@ class King(Chesspiece):
             if not board.getboard()[org_x + check_y][org_y].moved():
                 flag = True  # Assume between the pieces are empty
                 for x in range(1, 3):
-                    if board.getboard()[org_x + x][org_y] != 0:
+                    if board.getboard()[org_x + x][org_y].__class__.__name__ != "empty":
                         flag = False
                 if flag:  # No pieces between them
                     mydict[np.array(org_x, org_y)].append(np.array(org_x + 2, org_y))
