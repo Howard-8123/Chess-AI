@@ -1,4 +1,4 @@
-from chess import *
+from Classes import *
 
 
 def main():
@@ -10,7 +10,7 @@ def create_board():
     # white side
     for x in range(0, 8):
         for y in range(0, 2):
-            if y !=0:
+            if y ==0:
                 if x == 0 or x ==7:
                     piece = Rook((x,y), 0)
                 elif x == 1 or x ==6:
@@ -40,13 +40,19 @@ def create_board():
                 elif x == 4:
                     piece = King((x,y), 1)
             myboard.change((x, y), piece)
-    print(myboard.getboard())
-    for piece in myboard.board:
-        pos = myboard.board.index(piece)
-        print(pos)
-        myboard.change(pos, piece.__class__.__name__)
+    # print(myboard.getboard())
+    # visualise = []
+    # for row in myboard.board:
+    #     x = myboard.board.index(row)
+    #     temp_row =[]
+    #     for piece in row:
+    #         y = row.index(piece)
+    #         print(x, y, piece.__class__.__name__)
+    #         temp_row.append(piece.__class__.__name__)
+    #     visualise.append(temp_row)
+    # for i in visualise:
+    #     print(i)
 
-    print(myboard.getboard())
 
 
     print(myboard.all_legal(0))
