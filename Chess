@@ -32,7 +32,7 @@ class ChessBoard:
             for piece in row:
                 if piece.__class__.__name__ == "empty":
                     pass
-                elif piece.getside() == side:  # white
+                elif piece.getside() == side:
                     org_pos = piece.get_pos(self.board)
                     y = -1
                     for x in range(0, 8):
@@ -75,7 +75,13 @@ class Chesspiece:
                 pass
 
     def get_pos(self, board):
-        return tuple(board.index(self))
+        for y, row in enumerate(board):
+            for x, piece in enumerate(row):
+                if piece == self:
+                    print(x, y)
+                    return x, y
+
+
 
 
     def getside(self):
