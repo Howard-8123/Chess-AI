@@ -38,7 +38,7 @@ class ChessBoard:
                     for x in range(0, 8):
                         y += 1
                         pos = (x, y)
-                        if piece.legal_move(org_pos, pos, self.board):
+                        if piece.legal_move(pos, self):
                             if org_pos not in legal_dict.keys():
                                 legal_dict[org_pos] = []
                             legal_dict[org_pos].append(pos)
@@ -283,18 +283,18 @@ class King(Chesspiece):
                 check_x = 3
                 check_y = 4
             mydict[(org_x, org_y)] = []
-            if not board.getpiece(org_x - check_x, org_y).moved():
+            if not board.getpiece((org_x - check_x, org_y)).moved:
                 flag = True  # Assume between the pieces are empty
                 for x in range(1, 4):
-                    if board.getpiece(org_x - x, org_y).__class__.__name__ != "empty":
+                    if board.getpiece((org_x - x, org_y)).__class__.__name__ != "empty":
                         flag = False
                 if flag:  # No pieces between them
                     mydict[(org_x, org_y)].append((org_x - 2, org_y))
                     mydict[(org_x - 4, org_y)] = (org_x-1, org_y)
-            if not board.getpiece(org_x + check_y, org_y).moved():
+            if not board.getpiece((org_x + check_y, org_y)).moved:
                 flag = True  # Assume between the pieces are empty
                 for x in range(1, 3):
-                    if board.getpiece(org_x + x, org_y).__class__.__name__ != "empty":
+                    if board.getpiece((org_x + x, org_y)).__class__.__name__ != "empty":
                         flag = False
                 if flag:  # No pieces between them
                     mydict[(org_x, org_y)].append((org_x + 2, org_y))
