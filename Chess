@@ -78,7 +78,6 @@ class Chesspiece:
         for y, row in enumerate(board):
             for x, piece in enumerate(row):
                 if piece == self:
-                    print(x, y)
                     return x, y
 
 
@@ -208,7 +207,8 @@ class Rook(Chesspiece):
                 direction = 1
                 if org_x > dest_x:
                     direction = -1
-                for x in range(org_x+1, dest_x, direction):
+                '''print("210",org_x, dest_x, direction)'''
+                for x in range(org_x, dest_x, direction):
                     if board.getpiece((x, org_y)).__class__.__name__ != "empty":
                         return False
                 return True
@@ -219,7 +219,7 @@ class Rook(Chesspiece):
                 direction = 1
                 if org_y > dest_y:
                     direction = -1
-                for x in range(org_y+1, dest_y, direction):
+                for x in range(org_y, dest_y, direction):
                     if board.getpiece((x, org_y)).__class__.__name__ != "empty":
                         return False
                 return True
@@ -244,14 +244,16 @@ class King(Chesspiece):
 
     def legal_move(self, destination, board):
         original = self.pos
+        if self.OutofBoard(destination):
+            return False
+
         if original in self.castling(board).keys():
             if self.castling(board)[original] == destination:
                 return True
-        if self.checked(self, destination, board):
+
+        if self.checked(destination, board):
             return False
 
-        if self.OutofBoard(destination):
-            return False
         org_x, org_y = split(original)
         dest_x, dest_y = split(destination)
 
@@ -274,15 +276,18 @@ class King(Chesspiece):
 
     def castling(self, board):
         org_x, org_y = split(self.pos)
+        print(org_x, org_y)
         mydict = {}
         if not self.moved:
             if self.side == 0:
                 check_x = 4
                 check_y= 3
+                print("0")
             else:
                 check_x = 3
                 check_y = 4
             mydict[(org_x, org_y)] = []
+            print(f"Check 1{(org_x - check_x, org_y) }")
             if not board.getpiece((org_x - check_x, org_y)).moved:
                 flag = True  # Assume between the pieces are empty
                 for x in range(1, 4):
@@ -291,6 +296,7 @@ class King(Chesspiece):
                 if flag:  # No pieces between them
                     mydict[(org_x, org_y)].append((org_x - 2, org_y))
                     mydict[(org_x - 4, org_y)] = (org_x-1, org_y)
+            print(f"Check 2{(org_x + check_y, org_y)}")
             if not board.getpiece((org_x + check_y, org_y)).moved:
                 flag = True  # Assume between the pieces are empty
                 for x in range(1, 3):
